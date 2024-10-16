@@ -1,4 +1,3 @@
-// ECommerceApp/Program.cs
 using ECommerce.Modules.Orders.Services;
 using ECommerce.Modules.Products.Services;
 using ECommerce.Modules.Customers.Services;
@@ -8,6 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using ECommerce.Modules.Orders.Domain;
 using ECommerce.Modules.Products.Domain;
 using ECommerce.Modules.Customers.Domain;
+using ECommerce.Modules.Orders;
+using ECommerce.Modules.Customers;
+using ECommerce.Modules.Products;
+using ECommerce.Modules.Orders.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,9 +21,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Register services
-builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddOrderModule(builder.Configuration);
+builder.Services.AddCustomerModule(builder.Configuration);
+builder.Services.AddProductModule(builder.Configuration);
 
 // Use in-memory repository (for simplicity)
 builder.Services.AddSingleton(typeof(IRepository<>), typeof(InMemoryRepository<>));
@@ -34,28 +37,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapGet("/", () => "E-Commerce Modular Monolith with .NET 8!");
-
-app.MapPost("/orders", async (IOrderService orderService, 
-    List<OrderItem> items, Guid customerId, ILogger<Program> logger) =>
-{
-    logger.LogInformation("Creating order for customer {CustomerId}", customerId);
-    await orderService.CreateOrderAsync(customerId, items);
-    logger.LogInformation("Order created for customer {CustomerId}", customerId);
-
-    return Results.Ok("Order created!");
-});
-
-app.MapGet("/orders", async (IOrderService orderService) =>
-{
-    var orders = await orderService.GetAllOrdersAsync();
-    return Results.Ok(orders);
-});
-
-app.MapGet("/orders/{id}", async (IOrderService orderService, Guid id) =>
-{
-    var order = await orderService.GetOrderByIdAsync(id);
-    return order is not null ? Results.Ok(order) : Results.NotFound();
-});
+app.MapOrderEndpoints();
 
 app.MapPost("/products", async (IProductService productService,
     Product product, ILogger<Program> logger) =>
