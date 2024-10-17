@@ -4,7 +4,7 @@ using ECommerce.Modules.Products.Domain;
 
 namespace ECommerce.Modules.Products.Services;
 
-public class ProductCatalogService : IProductCatalogService
+internal class ProductCatalogService : IProductCatalogService
 {
     private readonly IProductService _productService;
 
