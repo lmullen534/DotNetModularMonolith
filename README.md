@@ -191,7 +191,3 @@ If you'd like to contribute, feel free to fork the repository and submit a pull 
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-This `README.md` provides a complete overview of the **ECommerceApp** project, including its setup, usage, and key features. Let me know if you'd like any adjustments!
