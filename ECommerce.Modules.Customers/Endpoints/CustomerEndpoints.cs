@@ -18,19 +18,25 @@ public static class CustomerEndpoints
       logger.LogInformation("Creating customer");
       await customerService.AddCustomerAsync(customer);
       return Results.Created($"/customers/{customer.Id}", customer);
-    });
+    })
+    .WithName("CreateCustomer")
+    .WithTags("Customers");
 
     app.MapGet("/customers", async (ICustomerService customerService) =>
     {
       var customers = await customerService.GetAllCustomersAsync();
       logger.LogInformation($"Number of customers to be returned: {customers.Count}");
       return Results.Ok(customers);
-    });
+    })
+    .WithName("GetAllCustomers")
+    .WithTags("Customers");
 
     app.MapGet("/customers/{id}", async (ICustomerService customerService, Guid id) =>
     {
       var customer = await customerService.GetCustomerByIdAsync(id);
       return customer is not null ? Results.Ok(customer) : Results.NotFound();
-    });
+    })
+    .WithName("GetCustomerById")
+    .WithTags("Customers");
   }
 }

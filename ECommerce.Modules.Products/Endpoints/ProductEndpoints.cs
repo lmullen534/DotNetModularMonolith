@@ -19,19 +19,25 @@ public static class ProductEndpoints
       await productService.AddProductAsync(product);
 
       return Results.Ok("Product created!");
-    });
+    })
+    .WithName("CreateProduct")
+    .WithTags("Products");
 
     app.MapGet("/products", async (IProductService productService) =>
     {
       var products = await productService.GetAllProductsAsync();
       logger.LogInformation($"Number of products to be returned: {products.Count}");
       return Results.Ok(products);
-    });
+    })
+    .WithName("GetAllProducts")
+    .WithTags("Products");
 
     app.MapGet("/products/{id}", async (IProductService productService, Guid id) =>
     {
       var product = await productService.GetProductByIdAsync(id);
       return product is not null ? Results.Ok(product) : Results.NotFound();
-    });
+    })
+    .WithName("GetProductById")
+    .WithTags("Products");
   }
 }

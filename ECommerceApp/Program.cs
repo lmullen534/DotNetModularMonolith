@@ -26,7 +26,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/", () => "E-Commerce Modular Monolith with .NET 8!").WithTags("Home").WithName("Home");
+app.MapGet("/", () => "E-Commerce Modular Monolith with .NET 8!").WithTags("Home");
 app.MapOrderEndpoints();
 app.MapCustomerEndpoints();
 app.MapProductEndpoints();
