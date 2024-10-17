@@ -18,7 +18,7 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c => c.SwaggerDoc("v1", new() { Title = "E-Commerce Modular Monolith", Version = "v1" }));
 
 // Register services
 builder.Services.AddOrderModule(builder.Configuration);
@@ -36,7 +36,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/", () => "E-Commerce Modular Monolith with .NET 8!");
+app.MapGet("/", () => "E-Commerce Modular Monolith with .NET 8!").WithTags("Home").WithName("Home");
 app.MapOrderEndpoints();
 
 app.MapPost("/products", async (IProductService productService,
