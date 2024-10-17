@@ -1,10 +1,7 @@
-using ECommerce.Modules.Orders.Services;
 using ECommerce.Modules.Products.Services;
 using ECommerce.Modules.Customers.Services;
 using ECommerce.Common.Interfaces;
 using ECommerce.Common.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
-using ECommerce.Modules.Orders.Domain;
 using ECommerce.Modules.Products.Domain;
 using ECommerce.Modules.Customers.Domain;
 using ECommerce.Modules.Orders;
@@ -44,7 +41,6 @@ app.MapPost("/products", async (IProductService productService,
 {
     logger.LogInformation("Creating products");
     await productService.AddProductAsync(product);
-    logger.LogInformation("Product created");
 
     return Results.Ok("Product created!");
 });
@@ -67,9 +63,8 @@ app.MapPost("/customers", async (ICustomerService customerService,
 {
     logger.LogInformation("Creating customer");
     await customerService.AddCustomerAsync(customer);
-    logger.LogInformation("Customer created");
 
-    return Results.Ok("Customer created!");
+    return Results.Created($"/customers/{customer.Id}", customer);
 });
 
 app.MapGet("/customers", async (ICustomerService customerService, ILogger<Program> logger) =>
