@@ -35,10 +35,11 @@ public class OrderServiceTests
     var orderItem = new OrderItem(productId, 1, 100);
     var customerId = Guid.NewGuid();
     var order = new Order(customerId, [orderItem]);
+
     var customer = new CustomerDto() { Id = customerId, Name = "John Doe" };
     var product = new ProductDto() { Id = productId, Name = "Product 1", Price = 100 };
 
-    _orderRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Order>())).Returns(async () => order);
+    _orderRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Order>())).Returns(Task.FromResult(order));
     _customerCatalogServiceMock.Setup(service => service.GetCustomerByIdAsync(It.IsAny<Guid>())).ReturnsAsync(customer);
     _productCatalogServiceMock.Setup(service => service.GetProductByIdAsync(It.IsAny<Guid>())).ReturnsAsync(product);
 
