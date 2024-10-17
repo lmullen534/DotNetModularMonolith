@@ -17,10 +17,15 @@ namespace ECommerce.Modules.Orders.Endpoints
         var logger = app.Logger;
         logger.LogInformation("Creating order for customer {CustomerId}", customerId);
 
-        await orderService.CreateOrderAsync(customerId, items);
+        var result = await orderService.CreateOrderAsync(customerId, items);
 
         logger.LogInformation("Order created for customer {CustomerId}", customerId);
 
+        if (!result.Success)
+        {
+          logger.LogError("Error creating order for customer {CustomerId}: {Message}", customerId, result.Message);
+          return Results.BadRequest(result.Message);
+        } 
         return Results.Ok("Order created!");
       })
       .WithName("CreateOrder")
