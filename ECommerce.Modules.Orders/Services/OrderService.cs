@@ -21,17 +21,22 @@ internal class OrderService(OrderDbContext orderDbContext,
   {
     try
     {
-      var products = await Task.WhenAll(items.Select(async item =>
+      var productTasks = items.Select(item => _productCatalogService.GetProductByIdAsync(item.ProductId)).ToList();
+      var products = await Task.WhenAll(productTasks);
+
+      if (products.Any(product => product == null))
       {
-        var product = await _productCatalogService.GetProductByIdAsync(item.ProductId);
-        return product ?? throw new Exception($"Product with id {item.ProductId} not found");
-      }));
+        throw new KeyNotFoundException("One or more products not found");
+      }
 
-      var customer = await _customerCatalogService.GetCustomerByIdAsync(customerId) ?? 
-        throw new Exception($"Customer with id {customerId} not found");
+      var customer = await _customerCatalogService.GetCustomerByIdAsync(customerId);
+      if (customer == null)
+      {
+        throw new KeyNotFoundException($"Customer with id {customerId} not found");
+      }
 
-            var order = new Order()
-            {
+      var order = new Order
+      {
         Id = Guid.NewGuid(),
         CustomerId = customerId,
         Items = items.Select((item, index) => new OrderItem
@@ -42,6 +47,7 @@ internal class OrderService(OrderDbContext orderDbContext,
           Price = products[index].Price
         }).ToList()
       };
+
       await _orderDbContext.Orders.AddAsync(order);
       await _orderDbContext.SaveChangesAsync();
 
@@ -49,7 +55,8 @@ internal class OrderService(OrderDbContext orderDbContext,
       {
         Success = true
       };
-    } catch (Exception ex)
+    }
+    catch (Exception ex)
     {
       _logger.LogError(ex, "Error creating order");
       return new OrderResult
@@ -57,7 +64,7 @@ internal class OrderService(OrderDbContext orderDbContext,
         Success = false,
         Message = ex.Message
       };
-    }    
+    }
   }
 
   public async Task<Order> GetOrderByIdAsync(Guid orderId)
