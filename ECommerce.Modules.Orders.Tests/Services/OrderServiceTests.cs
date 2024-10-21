@@ -1,7 +1,6 @@
 using ECommerce.Modules.Orders.Services;
 using ECommerce.Modules.Orders.Domain;
 using Moq;
-using ECommerce.Common.Interfaces;
 using Microsoft.Extensions.Logging;
 using ECommerce.Contracts.Interfaces;
 using ECommerce.Contracts.DTOs;
