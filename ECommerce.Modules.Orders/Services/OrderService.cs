@@ -46,19 +46,13 @@ internal class OrderService(OrderDbContext orderDbContext,
             await _orderDbContext.Orders.AddAsync(order);
             await _orderDbContext.SaveChangesAsync();
 
-            return new OrderResult
-            {
-                Success = true
-            };
+            return new OrderResult(true);
+
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error creating order");
-            return new OrderResult
-            {
-                Success = false,
-                Message = ex.Message
-            };
+            return new OrderResult(false, ex.Message);
         }
     }
 
