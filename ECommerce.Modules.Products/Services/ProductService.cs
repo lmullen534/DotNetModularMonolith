@@ -1,4 +1,3 @@
-using ECommerce.Common.Interfaces;
 using ECommerce.Modules.Products.Domain;
 using ECommerce.Modules.Products.Persistence;
 using Microsoft.Extensions.Logging;
