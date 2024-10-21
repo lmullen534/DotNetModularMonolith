@@ -28,14 +28,14 @@ public class OrderServiceTests
     var options = new DbContextOptionsBuilder<OrderDbContext>()
       .UseInMemoryDatabase(databaseName: "OrderDatabase")
       .Options;
-    
+
     _orderDbContext = new OrderDbContext(options);
-    _orderService = new OrderService(_orderDbContext, _loggerMock.Object, 
-      _productCatalogServiceMock.Object, 
+    _orderService = new OrderService(_orderDbContext, _loggerMock.Object,
+      _productCatalogServiceMock.Object,
       _customerCatalogServiceMock.Object);
   }
 
-  private static Order CreateTestOrder() 
+  private static Order CreateTestOrder()
   {
     var productId = Guid.NewGuid();
     var orderItem = new OrderItem()
@@ -56,14 +56,14 @@ public class OrderServiceTests
     var order = CreateTestOrder();
     var customerId = order.CustomerId;
     var productId = order.Items.First().ProductId;
-    
+
     using (var context = new OrderDbContext(new DbContextOptionsBuilder<OrderDbContext>()
       .UseInMemoryDatabase(databaseName: "OrderDatabase")
       .Options))
     {
       context.Add(order);
       context.SaveChanges();
-    
+
       var customer = new CustomerDto() { Id = customerId, Name = "John Doe" };
       var product = new ProductDto() { Id = productId, Name = "Product 1", Price = 100 };
 
@@ -91,7 +91,7 @@ public class OrderServiceTests
     };
     var customerId = Guid.NewGuid();
     var product = new ProductDto() { Id = productId, Name = "Product 1", Price = 100 };
-    var expectedErrorMessage = $"Product with id {productId} not found";
+    var expectedErrorMessage = "One or more products not found";
 
     _productCatalogServiceMock.Setup(service => service.GetProductByIdAsync(It.IsAny<Guid>())).ReturnsAsync((ProductDto?)null);
 
