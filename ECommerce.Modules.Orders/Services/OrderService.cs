@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ECommerce.Modules.Orders.Services;
 
-internal class OrderService(OrderDbContext orderDbContext,
+public class OrderService(OrderDbContext orderDbContext,
   ILogger<OrderService> logger,
   IProductCatalogService productCatalogService,
   ICustomerCatalogService customerCatalogService) : IOrderService
