@@ -36,13 +36,13 @@ public class CustomerArchitectureTests : BaseArchitecture
     [Fact]
     public void Module_Namespaces_Should_Be_Prefixed_With_Modules()
     {
-        // Arrange
-        IObjectProvider<IType> moduleClasses = CreateModuleClassesProvider();
+        IObjectProvider<IType> moduleClasses = ArchRuleDefinition.Types()
+            .That().ResideInNamespace(ModulesNamespace, true);
 
-        // Act
-        var rule = CreateModuleNamespaceRule(moduleClasses);
+        // Enforce the rule
+        var rule = ArchRuleDefinition.Types().That().Are(moduleClasses)
+            .Should().ResideInNamespace(ModulesNamespace, true);
 
-        // Assert
         rule.Check(_architecture);
     }
 
@@ -50,34 +50,13 @@ public class CustomerArchitectureTests : BaseArchitecture
     public void Domain_Classes_Should_Inherit_From_Entity()
     {
         // Arrange & Act
-        var rule = CreateDomainEntityInheritanceRule();
-
-        // Assert
-        rule.Check(_architecture);
-    }
-
-    private static IObjectProvider<IType> CreateModuleClassesProvider()
-    {
-        return ArchRuleDefinition.Types()
-            .That()
-            .ResideInNamespace(ModulesNamespace, true);
-    }
-
-    private static IArchRule CreateModuleNamespaceRule(IObjectProvider<IType> moduleClasses)
-    {
-        return ArchRuleDefinition.Types()
-            .That()
-            .Are(moduleClasses)
-            .Should()
-            .ResideInNamespace(ModulesNamespace, true);
-    }
-
-    private static IArchRule CreateDomainEntityInheritanceRule()
-    {
-        return ArchRuleDefinition.Classes()
+        var rule = ArchRuleDefinition.Classes()
             .That()
             .ResideInNamespace(CustomersDomainNamespace)
             .Should()
             .BeAssignableTo(typeof(Entity));
+
+        // Assert
+        rule.Check(_architecture);
     }
 }
