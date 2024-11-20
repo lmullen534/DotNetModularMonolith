@@ -3,7 +3,7 @@ using ECommerce.Contracts.DTOs;
 
 namespace ECommerce.Modules.Customers.Services;
 
-public class CustomerCatalogService(ICustomerService customerService) : ICustomerCatalogService
+internal class CustomerCatalogService(ICustomerService customerService) : ICustomerCatalogService
 {
     private readonly ICustomerService _customerService = customerService;
 
